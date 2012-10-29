@@ -1,0 +1,53 @@
+* Root ::= DeclList
+
+* DeclList ::= Dec
+* DeclList ::= Dec DeclList
+
+* Dec ::= 'main' '('')' '{' Stmts '}'
+* Dec ::= Function VariableName '(' TypeExpr VariableName ')' Stmts
+
+* Stmts ::= Stmt Stmts
+
+* Stmt ::= Decl
+* Stmt ::= Expr '=' Expr ';'
+* Stmt ::= '{' Stmts '}'
+* Stmt ::= 'if' '(' Expr ')' Stmt 'else' Stmt
+* Stmt ::= 'print' '(' Expr ')' ';'
+* Stmt ::= 'write' '(' Expr, Expr ')' ';'
+* Stmt ::=
+
+* Decl ::= TypeExpr variableName ';'
+
+* TypeExpr ::= 'Integer'
+* TypeExpr ::= 'Boolean'
+* TypeExpr ::= '[' TypeExpr ']'
+
+* ExprList ::= Expr
+* ExprList ::= Expr ',' ExprList
+
+* Expr ::= variableName
+* Expr ::= intConst
+* Expr ::= 'True'
+* Expr ::= 'False'
+* Expr ::= '[' ExprList ']'
+* Expr ::= Expr '+' Expr
+* Expr ::= Expr '*' Expr
+* Expr ::= Expr '-' Expr
+* Expr ::= Expr '/' Expr
+* Expr ::= Expr '%' Expr
+* Expr ::= Expr '==' Expr
+* Expr ::= Expr '<' Expr
+* Expr ::= Expr '>' Expr
+* Expr ::= Expr '>=' Expr
+* Expr ::= Expr '<=' Expr
+* Expr ::= Expr '!=' Expr
+
+// Maybe later
+* Expr ::= 'read' '<' TypeExpr '>' '(' Expr ')'
+* Expr ::= 'head' '(' Expr ')'
+* Expr ::= 'tail' '(' Expr ')'
+* Expr ::= 'null' '(' Expr ')'
+* Expr ::= 'map' '(' Expr ',' Expr ')'
+* Expr ::= 'filter' '(' Expr ',' Expr ')'
+* Expr ::= 'fold' '(' Expr ',' Expr ',' Expr ')'
+* Expr ::= 'zip' '(' Expr ',' Expr ')'
