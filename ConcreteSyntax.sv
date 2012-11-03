@@ -47,15 +47,15 @@ nonterminal Dec_c with pp, ast_Dec ;
 concrete production mainDecl_c
 d::Dec_c ::= 'main' '(' ')' '{' ss::Stmts_c '}'
 {
-	d.pp = "main(){" ++ ss.pp ++ "}";
+	d.pp = "main(){ " ++ ss.pp ++ " }";
 	d.ast_Dec = mainDecl(ss.ast_Stmts);
 }
 
 concrete production funcDecl_c
-d::Dec_c ::= 'Function' v1:: VariableName '(' te::TypeExpr_c v2::VariableName ')' '{' ss::Stmts_c '}'
+d::Dec_c ::= 'Function' te1::TypeExpr_c v1:: VariableName '(' te2::TypeExpr_c v2::VariableName ')' '{' ss::Stmts_c '}'
 {
-	d.pp = "Function " ++ v1.lexeme ++ "(" ++ te.pp ++ v2.lexeme ++ ")" ++ ss.pp;
-	d.ast_Dec = funcDecl(v1,te.ast_TypeExpr,v2,ss.ast_Stmts);
+	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ te2.pp ++ " " ++ v2.lexeme ++ ") { " ++ ss.pp ++ " }";
+	d.ast_Dec = funcDecl(te1.ast_TypeExpr,v1,te2.ast_TypeExpr,v2,ss.ast_Stmts);
 }
 
 -- Stmts
@@ -95,8 +95,15 @@ s::Stmt_c ::= '{' ss::Stmts_c  '}'
 concrete production assignmentStmt_c
 s::Stmt_c ::= l::Expr_c '=' r::Expr_c ';'
 {
-  s.pp = l.pp ++ " = " ++ r.pp ;
+  s.pp = l.pp ++ " = " ++ r.pp ++ ";";
   s.ast_Stmt = assignmentStmt(l.ast_Expr, r.ast_Expr) ;
+}
+
+concrete production returnStmt_c
+s::Stmt_c ::= 'return' e::Expr_c ';'
+{
+	s.pp = "return " ++ e.pp ++ " ;";
+	s.ast_Stmt = returnStmt(e.ast_Expr);
 }
 
 concrete production printStmt_c

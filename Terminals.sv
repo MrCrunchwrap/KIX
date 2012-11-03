@@ -40,6 +40,7 @@ lexer class KEYWORDS;
 
 terminal If      'if'     lexer classes { KEYWORDS }; 
 terminal Else    'else'   lexer classes { KEYWORDS };
+terminal Return  'return' lexer classes { KEYWORDS };
 terminal Print   'print'  lexer classes { KEYWORDS };
 terminal Main	 'main'   lexer classes { KEYWORDS };
 terminal Func	 'Function'   lexer classes { KEYWORDS };

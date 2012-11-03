@@ -12,6 +12,7 @@
 * Stmt ::= Expr '=' Expr ';'
 * Stmt ::= '{' Stmts '}'
 * Stmt ::= 'if' '(' Expr ')' Stmt 'else' Stmt
+* Stmt ::= 'return' Expr '''
 * Stmt ::= 'print' '(' Expr ')' ';'
 * Stmt ::= 'write' '(' Expr, Expr ')' ';'
 * Stmt ::=

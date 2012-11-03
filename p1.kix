@@ -11,7 +11,8 @@ else
   x = 4 ;
 }
 
-Function test (Integer a){
+Function Integer test (Integer a){
 	Integer x;
 	x = a;
+	return x;
 }

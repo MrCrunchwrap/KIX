@@ -44,15 +44,15 @@ nonterminal Dec with pp, errors;
 abstract production mainDecl
 d::Dec ::= ss::Stmts
 {
-	d.pp = "main(){" ++ ss.pp ++ "}";
+	d.pp = "main(){ " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
 	ss.env = [];
 }
 
 abstract production funcDecl
-d::Dec ::= v1::VariableName te::TypeExpr v2::VariableName ss::Stmts
+d::Dec ::= te1::TypeExpr v1::VariableName te2::TypeExpr v2::VariableName ss::Stmts
 {
-	d.pp = "Function " ++ v1.lexeme ++ "(" ++ te.pp ++ " " ++ v2.lexeme ++ ") { " ++ ss.pp ++ " }";
+	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ te2.pp ++ " " ++ v2.lexeme ++ ") { " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
 	ss.env = [];
 }
@@ -99,6 +99,15 @@ s::Stmt ::= l::Expr r::Expr
   s.defs = [ ] ;
   l.env = s.env ;
   r.env = s.env ;
+}
+
+abstract production returnStmt
+s::Stmt ::= e::Expr
+{
+	s.pp = "return " ++ e.pp ++ " ;";
+	s.errors = e.errors ;
+	s.defs = [ ] ;
+	e.env = s.env ;
 }
 
 abstract production printStmt
