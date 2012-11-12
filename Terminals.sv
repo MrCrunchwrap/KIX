@@ -33,6 +33,7 @@ terminal RightParen ')' precedence= 16;
 terminal LeftCurly  '{';
 terminal RightCurly '}';
 terminal Semicolon  ';';
+terminal Comma		',';
 
 lexer class KEYWORDS;
 

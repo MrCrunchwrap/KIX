@@ -11,6 +11,7 @@ nonterminal Root_c with pp, ast_Root;
 synthesized attribute ast_Root :: Root;
 synthesized attribute ast_DeclList :: DeclList;
 synthesized attribute ast_Dec :: Dec;
+synthesized attribute ast_Input :: Input;
 synthesized attribute ast_Stmts :: Stmts ;
 synthesized attribute ast_Stmt :: Stmt ;
 synthesized attribute ast_Expr :: Expr ;
@@ -52,10 +53,26 @@ d::Dec_c ::= 'main' '(' ')' '{' ss::Stmts_c '}'
 }
 
 concrete production funcDecl_c
-d::Dec_c ::= 'Function' te1::TypeExpr_c v1:: VariableName '(' te2::TypeExpr_c v2::VariableName ')' '{' ss::Stmts_c '}'
+d::Dec_c ::= 'Function' te1::TypeExpr_c v1:: VariableName '(' input::Input_c ')' '{' ss::Stmts_c '}'
 {
-	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ te2.pp ++ " " ++ v2.lexeme ++ ") { " ++ ss.pp ++ " }";
-	d.ast_Dec = funcDecl(te1.ast_TypeExpr,v1,te2.ast_TypeExpr,v2,ss.ast_Stmts);
+	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ input.pp ++ ") { " ++ ss.pp ++ " }";
+	d.ast_Dec = funcDecl(te1.ast_TypeExpr,v1,input.ast_Input,ss.ast_Stmts);
+}
+
+nonterminal Input_c with pp, ast_Input ;
+
+concrete production inputList_c
+input::Input_c ::= te::TypeExpr_c v:: VariableName ',' rest::Input_c
+{
+	input.pp = te.pp ++ " " ++ v.lexeme ++ ", " ++ rest.pp;
+	input.ast_Input = inputList(te.ast_TypeExpr,v,rest.ast_Input);
+}
+
+concrete production inputOne_c
+input::Input_c ::= te::TypeExpr_c v::VariableName
+{
+	input.pp = te.pp ++ " " ++ v.lexeme;
+	input.ast_Input = inputOne(te.ast_TypeExpr,v);
 }
 
 -- Stmts
@@ -116,7 +133,7 @@ ps::Stmt_c ::= 'print' '(' e::Expr_c ')' ';'
 concrete production ifThenElseStmt_c
 s::Stmt_c ::= 'if' '(' e::Expr_c ')' th::Stmt_c 'else' el::Stmt_c
 {
-  s.pp = "if ( " ++ e.pp ++ " ) " ++ th.pp ++ " else " ++ el.pp;
+  s.pp = "if (" ++ e.pp ++ ") " ++ th.pp ++ " else " ++ el.pp;
   s.ast_Stmt = ifThenElseStmt(e.ast_Expr, th.ast_Stmt, el.ast_Stmt) ;
 }
 
@@ -152,6 +169,77 @@ te::TypeExpr_c ::= b::Boolean_t
 -- Expr
 
 nonterminal Expr_c with pp, ast_Expr ;
+
+concrete production add_c
+e::Expr_c ::= e1::Expr_c '+' e2::Expr_c
+{
+	e.pp = e1.pp ++ " + " ++ e2.pp;
+	e.ast_Expr = add(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production sub_c
+e::Expr_c ::= e1::Expr_c '-' e2::Expr_c
+{
+	e.pp = e1.pp ++ " - " ++ e2.pp;
+	e.ast_Expr = sub(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production mult_c
+e::Expr_c ::= e1::Expr_c '*' e2::Expr_c
+{
+	e.pp = e1.pp ++ " * " ++ e2.pp;
+	e.ast_Expr = mult(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production div_c
+e::Expr_c ::= e1::Expr_c '/' e2::Expr_c
+{
+	e.pp = e1.pp ++ " / " ++ e2.pp;
+	e.ast_Expr = div(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production mod_c
+e::Expr_c ::= e1::Expr_c '%' e2::Expr_c
+{
+	e.pp = e1.pp ++ " % " ++ e2.pp;
+	e.ast_Expr = mod(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production lessThan_c
+e::Expr_c ::= e1::Expr_c '<' e2::Expr_c
+{
+	e.pp = e1.pp ++ " < " ++ e2.pp;
+	e.ast_Expr = lessThan(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production greaterThan_c
+e::Expr_c ::= e1::Expr_c '>' e2::Expr_c
+{
+	e.pp = e1.pp ++ " > " ++ e2.pp;
+	e.ast_Expr = greaterThan(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production greaterThanEq_c
+e::Expr_c ::= e1::Expr_c '>=' e2::Expr_c
+{
+	e.pp = e1.pp ++ " >= " ++ e2.pp;
+	e.ast_Expr = greaterThanEq(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production lessThanEq_c
+e::Expr_c ::= e1::Expr_c '<=' e2::Expr_c
+{
+	e.pp = e1.pp ++ " <= " ++ e2.pp;
+	e.ast_Expr = lessThanEq(e1.ast_Expr,e2.ast_Expr);
+}
+
+concrete production notEq_c
+e::Expr_c ::= e1::Expr_c '!=' e2::Expr_c
+{
+	e.pp = e1.pp ++ " != " ++ e2.pp;
+	e.ast_Expr = notEq(e1.ast_Expr,e2.ast_Expr);
+}
+
 
 concrete production varName_c
 e::Expr_c ::= n::VariableName

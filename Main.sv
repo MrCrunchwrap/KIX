@@ -25,7 +25,7 @@ IOVal<Integer> ::= largs::[String] ioin::IO
 
   local attribute print_success :: IO;
   print_success = 
-    print( "CST pretty print: " ++ r_cst.pp ++
+    writeFile("Output.txt", "CST pretty print: " ++ r_cst.pp ++
            "\n\n" ++ 
            "AST pretty print: " ++ r_ast.pp ++
            "\n\n" ++

@@ -50,11 +50,25 @@ d::Dec ::= ss::Stmts
 }
 
 abstract production funcDecl
-d::Dec ::= te1::TypeExpr v1::VariableName te2::TypeExpr v2::VariableName ss::Stmts
+d::Dec ::= te1::TypeExpr v1::VariableName input::Input ss::Stmts
 {
-	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ te2.pp ++ " " ++ v2.lexeme ++ ") { " ++ ss.pp ++ " }";
+	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ input.pp ++ ") { " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
 	ss.env = [];
+}
+
+nonterminal Input with pp, errors;
+
+abstract production inputList
+input::Input ::= te::TypeExpr v::VariableName rest::Input
+{
+	input.pp = te.pp ++ " " ++ v.lexeme ++ ", " ++ rest.pp;
+}
+
+abstract production inputOne
+input::Input ::= te::TypeExpr v::VariableName
+{
+	input.pp = te.pp ++ " " ++ v.lexeme;
 }
 
 nonterminal Stmts with pp, errors, env ;
@@ -82,6 +96,12 @@ s::Stmt ::= d::Decl
   s.pp = d.pp ++ ";" ;
   s.errors = [ ] ; --TODO fix this later
   s.defs = d.defs ;
+}
+
+abstract production exprStmt
+s::Stmt ::= e1::Expr e2::Expr
+{
+	s.pp = e1.pp ++ " = " ++ e2.pp ++ ";";
 }
 
 
@@ -122,7 +142,7 @@ s::Stmt ::= e::Expr
 abstract production ifThenElseStmt
 s::Stmt ::= e::Expr th::Stmt el::Stmt
 {
-  s.pp = "if ( " ++ e.pp ++ " ) " ++ th.pp ++ " else " ++ el.pp ;
+  s.pp = "if (" ++ e.pp ++ ") " ++ th.pp ++ " else " ++ el.pp ;
   s.errors = e.errors ++ th.errors ++ el.errors ;
   s.defs = [ ] ;
   e.env = s.env ;
@@ -153,6 +173,67 @@ te::TypeExpr ::= b::Boolean_t
 }
 
 nonterminal Expr with pp, errors, env;
+
+abstract production add
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " + " ++ e2.pp;
+}
+
+abstract production sub
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " - " ++ e2.pp;
+}
+
+abstract production mult
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " * " ++ e2.pp;
+}
+
+abstract production div
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " / " ++ e2.pp;
+}
+
+abstract production mod
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " % " ++ e2.pp;
+}
+
+abstract production lessThan
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " < " ++ e2.pp;
+}
+
+abstract production greaterThan
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " > " ++ e2.pp;
+}
+
+abstract production greaterThanEq
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " >= " ++ e2.pp;
+}
+
+abstract production lessThanEq
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " <= " ++ e2.pp;
+}
+
+abstract production notEq
+e::Expr ::= e1::Expr e2::Expr
+{
+	e.pp = e1.pp ++ " != " ++ e2.pp;
+}
+
 
 abstract production varName
 e::Expr ::= n::VariableName
