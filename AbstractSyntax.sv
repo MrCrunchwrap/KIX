@@ -49,6 +49,14 @@ d::Dec ::= ss::Stmts
 	ss.env = [];
 }
 
+abstract production funcDocDec
+d::Dec ::= doc::StringLiteral fd::Dec
+{
+	d.pp = doc.lexeme;
+	d.errors = fd.errors;
+}
+
+
 abstract production funcDecl
 d::Dec ::= te1::TypeExpr v1::VariableName input::Input ss::Stmts
 {

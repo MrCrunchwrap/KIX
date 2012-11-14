@@ -52,6 +52,13 @@ d::Dec_c ::= 'main' '(' ')' '{' ss::Stmts_c '}'
 	d.ast_Dec = mainDecl(ss.ast_Stmts);
 }
 
+concrete production funcDoc_c
+f::Dec_c ::= '**/' ds::StringLiteral '/**' fd::Dec_c
+{
+	f.pp = ds.lexeme;
+	f.ast_Dec = funcDocDec(ds, fd.ast_Dec);
+}
+
 concrete production funcDecl_c
 d::Dec_c ::= 'Function' te1::TypeExpr_c v1:: VariableName '(' input::Input_c ')' '{' ss::Stmts_c '}'
 {

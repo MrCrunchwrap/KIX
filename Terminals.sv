@@ -46,6 +46,10 @@ terminal Print   'print'  lexer classes { KEYWORDS };
 terminal Main	 'main'   lexer classes { KEYWORDS };
 terminal Func	 'Function'   lexer classes { KEYWORDS };
 
+-- Doc Comment
+terminal BeginDoc '**/';
+terminal EndDoc '/**';
+
 -- Types
 terminal Integer_t 'Integer' lexer classes { KEYWORDS };
 terminal Boolean_t 'Boolean' lexer classes { KEYWORDS };
@@ -56,6 +60,8 @@ terminal Boolean_t 'Boolean' lexer classes { KEYWORDS };
 ---   Decl ::= TypeExpr variableName ';'
 ---   Expr ::= variableName
 terminal VariableName  /[a-zA-Z][a-zA-Z0-9_]*/  submits to { KEYWORDS };
+
+terminal StringLiteral /\'([^\']|\'\')*\'/;
 
 --- Used in:
 ---   Expr ::= integerLiteral
