@@ -1,8 +1,13 @@
 KIX
 ===
 
-This project is built in a language called Silver, which is an
-attribute grammar specification language.
+This project is built in a language called Silver.
+
+Silver is a programming language that is being developed to 
+investigate highly-modular, extensible, attribute grammar-based 
+language specifications. In other words, Silver is a programming 
+language for implementing programming languages, with a focus on 
+making those languages extensible.
 
 More information about Silver can be found here:
 http://code.google.com/p/silver/
