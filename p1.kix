@@ -11,6 +11,8 @@ else
   x = 4 ;
 }
 
+**/ 'This function, named test1, inputs: a, returns: x' /**
+
 Function Integer test1 (Integer a){
 	Integer x;
 	x = a;

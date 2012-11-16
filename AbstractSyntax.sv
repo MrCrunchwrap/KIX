@@ -110,6 +110,7 @@ abstract production exprStmt
 s::Stmt ::= e1::Expr e2::Expr
 {
 	s.pp = e1.pp ++ " = " ++ e2.pp ++ ";";
+	s.errors = [ ] ; --TODO fix this later
 }
 
 
@@ -186,60 +187,70 @@ abstract production add
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " + " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production sub
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " - " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production mult
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " * " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production div
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " / " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production mod
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " % " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production lessThan
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " < " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production greaterThan
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " > " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production greaterThanEq
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " >= " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production lessThanEq
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " <= " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 abstract production notEq
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " != " ++ e2.pp;
+	e.errors = [ ] ; --TODO fix this later
 }
 
 
