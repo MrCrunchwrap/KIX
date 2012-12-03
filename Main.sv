@@ -24,8 +24,7 @@ IOVal<Integer> ::= largs::[String] ioin::IO
   r_ast = r_cst.ast_Root ;
 
 	local attribute write_HTML :: IO =
-		writeFile("HTMLoutput.html", "<html>\n" ++ r_ast.html ++
-		"\n" ++ "</html>", write_PP);
+		writeFile("HTMLoutput.html", r_ast.html, write_PP);
 
 	local attribute write_PP :: IO =
 		writeFile("Output.txt", "CST pretty print: " ++ r_cst.pp ++
@@ -34,15 +33,6 @@ IOVal<Integer> ::= largs::[String] ioin::IO
 			"\n\n" ++
 			foldl (stringConcat, "", r_ast.errors) ++ "\n\n"
 			, ioin );
-
-  local attribute print_success :: IO;
-  print_success = 
-    writeFile("Output.txt", "CST pretty print: " ++ r_cst.pp ++
-           "\n\n" ++ 
-           "AST pretty print: " ++ r_ast.pp ++
-           "\n\n" ++
-           foldl (stringConcat, "", r_ast.errors) ++ "\n\n"
-           , ioin );
 
   local attribute print_failure :: IO;
   print_failure =

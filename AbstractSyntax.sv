@@ -23,7 +23,7 @@ r::Root ::= dl::DeclList
 {
 	r.pp = dl.pp ;
 	r.errors = dl.errors ;
-	r.html = dl.html;
+	r.html = "<html>\n" ++ dl.html ++ "\n</html>";
 }
 
 nonterminal DeclList with pp, html, errors;
@@ -72,7 +72,7 @@ d::Dec ::= te1::TypeExpr v1::VariableName input::Input ss::Stmts
 	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ input.pp ++ ") { " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
 	ss.env = d.env ++ input.defs;
-	d.html = "<p> Test function </p>";
+	d.html = "<p> Test function </p>\n";
 }
 
 nonterminal Input with pp, html, errors, defs;
