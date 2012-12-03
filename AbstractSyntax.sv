@@ -37,16 +37,17 @@ dl::DeclList ::= d::Dec  rest::DeclList
 {
 	dl.pp = d.pp ++ rest.pp;
 	dl.errors = d.errors ++ rest.errors;
+	d.env = [];
 }
 
-nonterminal Dec with pp, errors;
+nonterminal Dec with pp, errors, env;
 
 abstract production mainDecl
 d::Dec ::= ss::Stmts
 {
 	d.pp = "main(){ " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
-	ss.env = [];
+	ss.env = d.env;
 }
 
 abstract production funcDocDec
@@ -54,6 +55,7 @@ d::Dec ::= doc::StringLiteral fd::Dec
 {
 	d.pp = doc.lexeme;
 	d.errors = fd.errors;
+	fd.env = d.env;
 }
 
 
@@ -62,21 +64,23 @@ d::Dec ::= te1::TypeExpr v1::VariableName input::Input ss::Stmts
 {
 	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ input.pp ++ ") { " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
-	ss.env = [];
+	ss.env = d.env ++ input.defs;
 }
 
-nonterminal Input with pp, errors;
+nonterminal Input with pp, errors, defs;
 
 abstract production inputList
-input::Input ::= te::TypeExpr v::VariableName rest::Input
+input::Input ::= d::Decl rest::Input
 {
-	input.pp = te.pp ++ " " ++ v.lexeme ++ ", " ++ rest.pp;
+	input.pp = d.pp ++ ", " ++ rest.pp;
+	input.defs = d.defs ++ rest.defs;
 }
 
-abstract production inputOne
-input::Input ::= te::TypeExpr v::VariableName
+abstract production oneInput
+input::Input ::= d::Decl
 {
-	input.pp = te.pp ++ " " ++ v.lexeme;
+	input.pp = d.pp;
+	input.defs = d.defs;
 }
 
 nonterminal Stmts with pp, errors, env ;

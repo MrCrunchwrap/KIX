@@ -53,7 +53,7 @@ d::Dec_c ::= 'main' '(' ')' '{' ss::Stmts_c '}'
 }
 
 concrete production funcDoc_c
-f::Dec_c ::= '**/' ds::StringLiteral '/**' fd::Dec_c
+f::Dec_c ::= '/' '*' '*' ds::StringLiteral '*' '*' '/' fd::Dec_c
 {
 	f.pp = ds.lexeme;
 	f.ast_Dec = funcDocDec(ds, fd.ast_Dec);
@@ -69,17 +69,17 @@ d::Dec_c ::= 'Function' te1::TypeExpr_c v1:: VariableName '(' input::Input_c ')'
 nonterminal Input_c with pp, ast_Input ;
 
 concrete production inputList_c
-input::Input_c ::= te::TypeExpr_c v:: VariableName ',' rest::Input_c
+input::Input_c ::= d::Decl_c ',' rest::Input_c
 {
-	input.pp = te.pp ++ " " ++ v.lexeme ++ ", " ++ rest.pp;
-	input.ast_Input = inputList(te.ast_TypeExpr,v,rest.ast_Input);
+	input.pp = d.pp ++ ", " ++ rest.pp;
+	input.ast_Input = inputList(d.ast_Decl, rest.ast_Input);
 }
 
-concrete production inputOne_c
-input::Input_c ::= te::TypeExpr_c v::VariableName
+concrete production oneInput_c
+input::Input_c ::= d::Decl_c
 {
-	input.pp = te.pp ++ " " ++ v.lexeme;
-	input.ast_Input = inputOne(te.ast_TypeExpr,v);
+	input.pp = d.pp;
+	input.ast_Input = oneInput(d.ast_Decl);
 }
 
 -- Stmts
