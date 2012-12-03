@@ -14,7 +14,8 @@ http://code.google.com/p/silver/
 
 The point of this project is to experiment with adding
 quasi-automatic documentation to kix using the tools provided
-by Silver.
+by Silver.  The end goal is to use these concepts to add the same
+functionality to Silver itself.
 
 We are also using this space to extend kix and add more
 functionality to it.
