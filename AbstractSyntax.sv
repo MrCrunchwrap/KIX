@@ -11,25 +11,31 @@ synthesized attribute pp :: String;
 
 synthesized attribute errors :: [ String ] ;
 
+synthesized attribute html :: String;
+
 inherited attribute env :: [ Pair<String   Decorated Decl> ] ;
 synthesized attribute defs :: [ Pair<String    Decorated Decl> ] ;
 
-nonterminal Root with pp, errors;
+nonterminal Root with pp, html, errors;
 
 abstract production root
 r::Root ::= dl::DeclList
 {
-  r.pp = dl.pp ;
-  r.errors = dl.errors ;
+	r.pp = dl.pp ;
+	r.errors = dl.errors ;
+	r.html = dl.html;
+	
+
 }
 
-nonterminal DeclList with pp, errors;
+nonterminal DeclList with pp, html, errors;
 
 abstract production oneDecl
 dl::DeclList ::= d::Dec
 {
 	dl.pp = d.pp;
 	dl.errors = d.errors;
+	dl.html = d.html;
 }
 
 abstract production decls
@@ -37,23 +43,26 @@ dl::DeclList ::= d::Dec  rest::DeclList
 {
 	dl.pp = d.pp ++ rest.pp;
 	dl.errors = d.errors ++ rest.errors;
+	dl.html = d.html ++ rest.html;
 }
 
-nonterminal Dec with pp, errors;
+nonterminal Dec with pp, html, errors;
 
 abstract production mainDecl
 d::Dec ::= ss::Stmts
 {
 	d.pp = "main(){ " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
+	d.html = ss.html;
 	ss.env = [];
 }
 
 abstract production funcDocDec
-d::Dec ::= doc::StringLiteral fd::Dec
+d::Dec ::= fd::Dec
 {
-	d.pp = doc.lexeme;
+	d.pp = "Function documentation";
 	d.errors = fd.errors;
+	d.html = fd.html;
 }
 
 
@@ -63,47 +72,53 @@ d::Dec ::= te1::TypeExpr v1::VariableName input::Input ss::Stmts
 	d.pp = "Function " ++ te1.pp ++ " " ++ v1.lexeme ++ "(" ++ input.pp ++ ") { " ++ ss.pp ++ " }";
 	d.errors = ss.errors;
 	ss.env = [];
+	d.html = "<p> Test function </p>";
 }
 
-nonterminal Input with pp, errors;
+nonterminal Input with pp, html, errors;
 
 abstract production inputList
 input::Input ::= te::TypeExpr v::VariableName rest::Input
 {
 	input.pp = te.pp ++ " " ++ v.lexeme ++ ", " ++ rest.pp;
+	input.html = te.html ++ rest.html;
 }
 
 abstract production inputOne
 input::Input ::= te::TypeExpr v::VariableName
 {
 	input.pp = te.pp ++ " " ++ v.lexeme;
+	input.html = te.html;
 }
 
-nonterminal Stmts with pp, errors, env ;
+nonterminal Stmts with pp, html, errors, env ;
 abstract production consStmts
 ss::Stmts ::= s::Stmt rest::Stmts
 {
-  ss.pp = s.pp ++ rest.pp ;
-  ss.errors = s.errors ++ rest.errors ;
-  s.env = ss.env ;
-  rest.env = s.defs ++ ss.env ;
+ 	ss.pp = s.pp ++ rest.pp ;
+ 	ss.errors = s.errors ++ rest.errors ;
+ 	s.env = ss.env ;
+ 	rest.env = s.defs ++ ss.env ;
+	ss.html = s.html ++ rest.html;
 }
 
 abstract production nilStmts
 ss::Stmts ::= 
 {
-  ss.pp = "" ;
-  ss.errors = [ ] ;
+	ss.pp = "" ;
+	ss.errors = [ ] ;
+	ss.html = "";
 }
 
-nonterminal Stmt with pp, errors, env, defs;
+nonterminal Stmt with pp, html, errors, env, defs;
 
 abstract production declStmt
 s::Stmt ::= d::Decl
 {
-  s.pp = d.pp ++ ";" ;
-  s.errors = [ ] ; --TODO fix this later
-  s.defs = d.defs ;
+	s.pp = d.pp ++ ";" ;
+	s.errors = [ ] ; --TODO fix this later
+	s.defs = d.defs ;
+	s.html = d.html;
 }
 
 abstract production exprStmt
@@ -111,6 +126,7 @@ s::Stmt ::= e1::Expr e2::Expr
 {
 	s.pp = e1.pp ++ " = " ++ e2.pp ++ ";";
 	s.errors = [ ] ; --TODO fix this later
+	s.html = e1.html ++ e2.html;
 }
 
 
@@ -128,6 +144,7 @@ s::Stmt ::= l::Expr r::Expr
   s.defs = [ ] ;
   l.env = s.env ;
   r.env = s.env ;
+	s.html = l.html ++ r.html;
 }
 
 abstract production returnStmt
@@ -137,6 +154,7 @@ s::Stmt ::= e::Expr
 	s.errors = e.errors ;
 	s.defs = [ ] ;
 	e.env = s.env ;
+	s.html = e.html;
 }
 
 abstract production printStmt
@@ -146,6 +164,7 @@ s::Stmt ::= e::Expr
   s.errors = e.errors ;
   s.defs = [ ] ;
   e.env = s.env ;
+	s.html = e.html;
 }
 
 abstract production ifThenElseStmt
@@ -157,37 +176,42 @@ s::Stmt ::= e::Expr th::Stmt el::Stmt
   e.env = s.env ;
   th.env = s.env ;
   el.env = s.env ;
+	s.html = "";
 }
 
-nonterminal Decl with pp, defs ;
+nonterminal Decl with pp, html, defs ;
 abstract production decl
 d::Decl ::= te::TypeExpr n::VariableName
 {
   d.pp = te.pp ++ " " ++ n.lexeme ;
   d.defs = [ pair(n.lexeme, d) ] ;
+	d.html = te.html;
 }
 
-nonterminal TypeExpr with pp;
+nonterminal TypeExpr with pp, html;
 
 abstract production intTypeExpr
 te::TypeExpr ::= i::Integer_t
 {
   te.pp = i.lexeme ;
+	te.html = "";
 }
 
 abstract production boolTypeExpr
 te::TypeExpr ::= b::Boolean_t
 {
   te.pp = b.lexeme ;
+	te.html = "";
 }
 
-nonterminal Expr with pp, errors, env;
+nonterminal Expr with pp, html, errors, env;
 
 abstract production add
 e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " + " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production sub
@@ -195,6 +219,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " - " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production mult
@@ -202,6 +227,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " * " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production div
@@ -209,6 +235,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " / " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production mod
@@ -216,6 +243,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " % " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production lessThan
@@ -223,6 +251,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " < " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production greaterThan
@@ -230,6 +259,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " > " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production greaterThanEq
@@ -237,6 +267,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " >= " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production lessThanEq
@@ -244,6 +275,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " <= " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 abstract production notEq
@@ -251,6 +283,7 @@ e::Expr ::= e1::Expr e2::Expr
 {
 	e.pp = e1.pp ++ " != " ++ e2.pp;
 	e.errors = [ ] ; --TODO fix this later
+	e.html = "";
 }
 
 
@@ -262,6 +295,7 @@ e::Expr ::= n::VariableName
                nothing() -> [ n.lexeme ++ " is not defined. \n\n" ] 
              | just(d) -> [ ]
              end ;
+	e.html = "";
 }
 
 function lookup
@@ -279,6 +313,7 @@ e::Expr ::= i::IntegerLiteral
 {
   e.pp = i.lexeme ;
   e.errors = [ ] ;
+	e.html = "";
 }
 
 abstract production boolLit
@@ -286,4 +321,5 @@ e::Expr ::= b::BooleanLiteral
 {
   e.pp = b.lexeme ;
   e.errors = [ ] ;
+	e.html = "";
 }

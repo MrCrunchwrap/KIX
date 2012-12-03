@@ -53,10 +53,10 @@ d::Dec_c ::= 'main' '(' ')' '{' ss::Stmts_c '}'
 }
 
 concrete production funcDoc_c
-f::Dec_c ::= '**/' ds::StringLiteral '/**' fd::Dec_c
+f::Dec_c ::= '**/' '/**' fd::Dec_c
 {
-	f.pp = ds.lexeme;
-	f.ast_Dec = funcDocDec(ds, fd.ast_Dec);
+	f.pp = "Function documentation";
+	f.ast_Dec = funcDocDec(fd.ast_Dec);
 }
 
 concrete production funcDecl_c
